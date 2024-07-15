@@ -1,0 +1,15 @@
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Zig
+.zig-cache/
+zig-cache/
+zig-out/
+
+/release/
+/debug/
+/build/
+/build-*/
+/docgen_tmp/
