@@ -5,6 +5,24 @@ pub fn main() !void {
     defer _ = gpa.deinit();
     const allocator = gpa.allocator();
 
+    const args = try std.process.argsAlloc(allocator);
+    defer std.process.argsFree(allocator, args);
+
+    if (args.len < 2) {
+        try std.io.getStdOut().writer().print("Usage: {s} <command>\n", .{args[0]});
+        return;
+    }
+
+    const command = args[1];
+
+    if (std.mem.eql(u8, command, "hostname")) {
+        try printHostname(allocator);
+    } else {
+        try std.io.getStdOut().writer().print("Unknown command: {s}\n", .{command});
+    }
+}
+
+fn printHostname(allocator: std.mem.Allocator) !void {
     var child = std.process.Child.init(&[_][]const u8{ "sysctl", "-n", "kern.hostname" }, allocator);
     child.stdout_behavior = .Pipe;
     child.stderr_behavior = .Pipe;
